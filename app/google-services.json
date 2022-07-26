@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "257182262901",
+    "project_id": "cracked-612d9",
+    "storage_bucket": "cracked-612d9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:257182262901:android:e12f3929d6135ffcf8fa3c",
+        "android_client_info": {
+          "package_name": "com.example.cracked"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "257182262901-3th5musngpoeteah2b8pogk98iti5p2f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLeN3ZfnMK5GOC1G3MZWlttQmaO5rtvYs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "257182262901-3th5musngpoeteah2b8pogk98iti5p2f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
