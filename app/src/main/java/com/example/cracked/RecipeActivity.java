@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,12 +35,16 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class RecipeActivity extends AppCompatActivity {
+public class RecipeActivity extends AppCompatActivity implements View.OnClickListener{
 
     TextView titleTextView;
     ImageView imageView;
     LinearLayout lLayout;
     Toolbar toolbar;
+    Button scaleButton;
+    Button conversionButton;
+    Button editButton;
+    ArrayList<String> ingredients;
 
     // test recipes
     // https://www.allrecipes.com/recipe/254970/fried-green-tomato-parmesan/
@@ -56,6 +62,15 @@ public class RecipeActivity extends AppCompatActivity {
         titleTextView = findViewById(R.id.titleTextView);
         imageView = findViewById(R.id.imageView);
         lLayout = findViewById(R.id.recipeLinearLayout);
+        scaleButton = findViewById(R.id.scaleButton);
+        conversionButton = findViewById(R.id.conversionButton);
+        editButton = findViewById(R.id.editButton);
+
+        scaleButton.setOnClickListener(this);
+        conversionButton.setOnClickListener(this);
+        editButton.setOnClickListener(this);
+
+
 
         toolbar.setTitle("Recipe");
         setSupportActionBar(toolbar);
@@ -98,7 +113,7 @@ public class RecipeActivity extends AppCompatActivity {
                     try {
                         Document document = Jsoup.connect(websiteURL).timeout(6000).get();
 
-                        ArrayList<String> ingredients = new ArrayList<>();
+                        ingredients = new ArrayList<>();
                         ArrayList<String> directions = new ArrayList<>();
 
                         // find recipe ingredients
@@ -277,6 +292,23 @@ public class RecipeActivity extends AppCompatActivity {
 
             // add the textview to the linearlayout
             lLayout.addView(rowTextView);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.editButton: {
+
+            }
+            case R.id.conversionButton: {
+//                for (int i = 0; i < ingredients.size(); ++i) {
+//                    String temp = ingredients.indexOf(i);
+//                }
+            }
+            case R.id.scaleButton: {
+
+            }
 
         }
     }
