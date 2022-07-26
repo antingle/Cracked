@@ -34,6 +34,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RecipeViewHolder>{
             int itemPosition = mRecyclerView.getChildAdapterPosition(v);
             Intent intent = new Intent(mContext, RecipeActivity.class);
             Bundle bundle = new Bundle();
+            bundle.putString("id", recipeList.get(itemPosition).id);
             bundle.putString("title", recipeList.get(itemPosition).title);
             bundle.putString("imageURL", recipeList.get(itemPosition).imageURL);
             bundle.putStringArrayList("ingredients", recipeList.get(itemPosition).ingredients);

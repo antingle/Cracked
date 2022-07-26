@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
                         recipeList = new ArrayList<Recipe>();
                         for (QueryDocumentSnapshot doc : value) {
-                            Recipe recipe = new Recipe(
+                            Recipe recipe = new Recipe(doc.getId(),
                                     doc.getString("title"),
                                     doc.getString("imageURL"),
                                     (ArrayList<String>) doc.getData().get("ingredients"),

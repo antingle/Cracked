@@ -1,5 +1,6 @@
 package com.example.cracked;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,13 +14,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
@@ -85,10 +90,33 @@ public class RecipeActivity extends AppCompatActivity implements View.OnClickLis
 
             // if websiteURL is empty, that means an imported recipe is being loaded instead
             if (websiteURL == null && extras.getString("title") != null) {
-                recipe.title = extras.getString("title");
-                recipe.imageURL = extras.getString("imageURL");
-                recipe.ingredients = extras.getStringArrayList("ingredients");
-                recipe.directions = extras.getStringArrayList("directions");
+                recipe.id = extras.getString("id");
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                db.collection("recipes")
+                        .document(recipe.id)
+                        .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                            @Override
+                            public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                                @Nullable FirebaseFirestoreException e) {
+                                if (e != null) {
+                                    Log.w("RecipeActivity", "Listen failed.", e);
+                                    return;
+                                }
+
+                                String source = snapshot != null && snapshot.getMetadata().hasPendingWrites()
+                                        ? "Local" : "Server";
+
+                                if (snapshot != null && snapshot.exists()) {
+                                    recipe.title = snapshot.getString("title");
+                                    recipe.imageURL = snapshot.getString("imageURL");
+                                    recipe.ingredients = (ArrayList<String>) snapshot.get("ingredients");
+                                    recipe.directions = (ArrayList<String>) snapshot.get("directions");
+                                    setUpUI();
+                                } else {
+                                    Log.d("RecipeActivity", source + " data: null");
+                                }
+                            }
+                        });
             }
         }
 
@@ -158,10 +186,6 @@ public class RecipeActivity extends AppCompatActivity implements View.OnClickLis
                     });
                 }
             });
-
-            // setup UI from an already imported recipe
-        } else {
-            setUpUI();
         }
 
     }
@@ -248,6 +272,7 @@ public class RecipeActivity extends AppCompatActivity implements View.OnClickLis
     private void setUpUI() {
         titleTextView.setText(this.recipe.title);
         Picasso.get().load(this.recipe.imageURL).into(imageView);
+        lLayout.removeAllViews();
 
         // ingredients header
         final TextView ingredientsHeader = new TextView(RecipeActivity.this);
@@ -297,7 +322,16 @@ public class RecipeActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.editButton: {
-
+                // start Edit Activity
+                Intent intent = new Intent(getApplicationContext(), EditRecipeActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("id", recipe.id);
+                bundle.putString("title", recipe.title);
+                bundle.putString("imageURL", recipe.imageURL);
+                bundle.putStringArrayList("ingredients", recipe.ingredients);
+                bundle.putStringArrayList("directions", recipe.directions);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
             case R.id.conversionButton: {
 //                for (int i = 0; i < ingredients.size(); ++i) {

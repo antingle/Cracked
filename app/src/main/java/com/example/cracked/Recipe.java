@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class Recipe {
+    String id;
     String title;
     String imageURL;
     ArrayList<String> ingredients;
@@ -13,7 +14,8 @@ public class Recipe {
 
     }
 
-    public Recipe(String title, String imageURL, ArrayList<String> ingredients, ArrayList<String> directions) {
+    public Recipe(String id, String title, String imageURL, ArrayList<String> ingredients, ArrayList<String> directions) {
+        this.id = id;
         this.title = title;
         this.imageURL = imageURL;
         this.ingredients = ingredients;

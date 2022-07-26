@@ -16,6 +16,9 @@
         android:theme="@style/Theme.Cracked"
         tools:targetApi="31">
         <activity
+            android:name=".EditRecipeActivity"
+            android:exported="false" />
+        <activity
             android:name=".RecipeActivity"
             android:exported="false" />
         <activity
