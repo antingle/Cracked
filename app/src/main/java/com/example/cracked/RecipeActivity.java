@@ -270,7 +270,7 @@ public class RecipeActivity extends AppCompatActivity {
             final TextView rowTextView = new TextView(RecipeActivity.this);
 
             // set some properties of rowTextView or something
-            rowTextView.setText(recipe.directions.get(i));
+            rowTextView.setText(i + 1 + ". " + recipe.directions.get(i));
             rowTextView.setPadding(0, 10, 0, 10);
             rowTextView.setTextSize(16);
             rowTextView.setTextColor(Color.BLACK);

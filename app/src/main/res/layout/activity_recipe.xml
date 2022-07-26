@@ -47,6 +47,38 @@
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:textSize="24sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/scaleButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="1x" />
+
+                    <Button
+                        android:id="@+id/conversionButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Imperial" />
+
+                    <Button
+                        android:id="@+id/editButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/primary"
+                        android:text="Edit Recipe"
+                        android:textColor="@color/white" />
+
+                </LinearLayout>
+
             </LinearLayout>
 
         </LinearLayout>
