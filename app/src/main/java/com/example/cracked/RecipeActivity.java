@@ -70,8 +70,6 @@ public class RecipeActivity extends AppCompatActivity implements View.OnClickLis
         conversionButton.setOnClickListener(this);
         editButton.setOnClickListener(this);
 
-
-
         toolbar.setTitle("Recipe");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
