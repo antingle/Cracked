@@ -1,9 +1,5 @@
 package com.example.cracked;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +9,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -57,6 +57,7 @@ public class RecipeActivity extends AppCompatActivity {
         imageView = findViewById(R.id.imageView);
         lLayout = findViewById(R.id.recipeLinearLayout);
 
+        toolbar.setTitle("Recipe");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -130,7 +131,7 @@ public class RecipeActivity extends AppCompatActivity {
 
                         recipe.ingredients = ingredients;
                         recipe.directions = directions;
-                        AddRecipeToDatabase(recipe);
+                        AddRecipeToDatabase();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -152,24 +153,27 @@ public class RecipeActivity extends AppCompatActivity {
 
     }
 
-    // add the back button
+    // menu items
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
+        int id = item.getItemId();
+        if (id == R.id.action_add_to_cart) {
+            AddToShoppingCart();
+        } else if (id == android.R.id.home) {
+            finish();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return true;
+    @Override
+    public boolean onCreateOptionsMenu(
+            Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_recipe, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     // add the recipe to firebase
-    private void AddRecipeToDatabase(Recipe recipe) {
+    private void AddRecipeToDatabase() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Map<String, Object> docData = new HashMap<>();
         docData.put("title", recipe.title);
@@ -184,7 +188,7 @@ public class RecipeActivity extends AppCompatActivity {
                     public void onSuccess(DocumentReference documentReference) {
                         Toast.makeText(getApplicationContext(),
                                 recipe.title + " has been imported",
-                                Toast.LENGTH_LONG).show();
+                                Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -192,57 +196,87 @@ public class RecipeActivity extends AppCompatActivity {
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(getApplicationContext(),
                                 "Uh oh! Something went wrong, the recipe could not be added :(",
-                                Toast.LENGTH_LONG).show();
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
 
     }
 
+    // add the recipe ingredients to the shopping cart on firebase
+    private void AddToShoppingCart() {
+        // Add each ingredient to shopping cart
+        for (String ingredient : recipe.ingredients) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            Map<String, Object> docData = new HashMap<>();
+            docData.put("name", ingredient);
+            docData.put("isChecked", false);
+            docData.put("timestamp", new Date());
+            db.collection("shoppingCart")
+                    .add(docData)
+                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            Toast.makeText(getApplicationContext(),
+                                    "Ingredients to " + recipe.title + " have been added to the shopping cart",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getApplicationContext(),
+                                    "Uh oh! Something went wrong, the recipe could not be added to the shopping cart:(",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+    }
+
     private void setUpUI() {
-            titleTextView.setText(this.recipe.title);
-            Picasso.get().load(this.recipe.imageURL).into(imageView);
+        titleTextView.setText(this.recipe.title);
+        Picasso.get().load(this.recipe.imageURL).into(imageView);
 
-            // ingredients header
-            final TextView ingredientsHeader = new TextView(RecipeActivity.this);
-            ingredientsHeader.setText("Ingredients");
-            ingredientsHeader.setPadding(0, 60, 0, 0);
-            ingredientsHeader.setTextSize(18);
-            lLayout.addView(ingredientsHeader);
+        // ingredients header
+        final TextView ingredientsHeader = new TextView(RecipeActivity.this);
+        ingredientsHeader.setText("Ingredients");
+        ingredientsHeader.setPadding(0, 60, 0, 0);
+        ingredientsHeader.setTextSize(18);
+        lLayout.addView(ingredientsHeader);
 
-            // ingredients list
-            for (int i = 0; i < recipe.ingredients.size(); i++) {
-                // create a new textview
-                final TextView rowTextView = new TextView(RecipeActivity.this);
+        // ingredients list
+        for (int i = 0; i < recipe.ingredients.size(); i++) {
+            // create a new textview
+            final TextView rowTextView = new TextView(RecipeActivity.this);
 
-                // set some properties of rowTextView or something
-                rowTextView.setText(recipe.ingredients.get(i));
-                rowTextView.setPadding(0, 10, 0, 10);
-                rowTextView.setTextSize(16);
-                rowTextView.setTextColor(Color.BLACK);
+            // set some properties of rowTextView or something
+            rowTextView.setText(recipe.ingredients.get(i));
+            rowTextView.setPadding(0, 10, 0, 10);
+            rowTextView.setTextSize(16);
+            rowTextView.setTextColor(Color.BLACK);
 
-                // add the textview to the linearlayout
-                lLayout.addView(rowTextView);
-            }
+            // add the textview to the linearlayout
+            lLayout.addView(rowTextView);
+        }
 
-            final TextView directionsHeader = new TextView(RecipeActivity.this);
-            directionsHeader.setText("Directions");
-            directionsHeader.setPadding(0, 60, 0, 0);
-            directionsHeader.setTextSize(18);
-            lLayout.addView(directionsHeader);
+        final TextView directionsHeader = new TextView(RecipeActivity.this);
+        directionsHeader.setText("Directions");
+        directionsHeader.setPadding(0, 60, 0, 0);
+        directionsHeader.setTextSize(18);
+        lLayout.addView(directionsHeader);
 
-            // directions list
-            for (int i = 0; i < recipe.directions.size(); i++) {
-                // create a new textview
-                final TextView rowTextView = new TextView(RecipeActivity.this);
+        // directions list
+        for (int i = 0; i < recipe.directions.size(); i++) {
+            // create a new textview
+            final TextView rowTextView = new TextView(RecipeActivity.this);
 
-                // set some properties of rowTextView or something
-                rowTextView.setText(recipe.directions.get(i));
-                rowTextView.setPadding(0, 10, 0, 10);
-                rowTextView.setTextSize(16);
-                rowTextView.setTextColor(Color.BLACK);
+            // set some properties of rowTextView or something
+            rowTextView.setText(recipe.directions.get(i));
+            rowTextView.setPadding(0, 10, 0, 10);
+            rowTextView.setTextSize(16);
+            rowTextView.setTextColor(Color.BLACK);
 
-                // add the textview to the linearlayout
-                lLayout.addView(rowTextView);
+            // add the textview to the linearlayout
+            lLayout.addView(rowTextView);
 
         }
     }

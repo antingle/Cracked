@@ -9,4 +9,5 @@
     android:theme="@style/Theme.Cracked.Toolbar"
     app:popupTheme="@style/Theme.Cracked.Toolbar"
     app:subtitleTextColor="@color/white"
-    app:titleTextColor="@color/white" />
+    app:titleTextColor="@color/white"
+    />

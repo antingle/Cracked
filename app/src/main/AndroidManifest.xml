@@ -19,6 +19,9 @@
             android:name=".RecipeActivity"
             android:exported="false" />
         <activity
+            android:name=".ShoppingCartActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
