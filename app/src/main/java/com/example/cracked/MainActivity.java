@@ -2,33 +2,21 @@ package com.example.cracked;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.annotation.SuppressLint;
 
 import java.net.URL;
-import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-import android.app.ActionBar;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -36,13 +24,13 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.io.IOException;
-
 public class MainActivity extends AppCompatActivity {
 
     Button importButton;
     EditText editTextRecipeURL;
-    public RecyclerView recyclerView;
+    RecyclerView recyclerView;
+    Toolbar toolbar;
+
     ArrayList<Recipe> recipeList;
 
     @Override
@@ -50,9 +38,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        importButton = (Button) findViewById(R.id.importButton);
-        editTextRecipeURL = (EditText) findViewById(R.id.editTextRecipeURL);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        toolbar = findViewById(R.id.toolbarView);
+        importButton = findViewById(R.id.importButton);
+        editTextRecipeURL = findViewById(R.id.editTextRecipeURL);
+        recyclerView = findViewById(R.id.recyclerView);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         importButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {

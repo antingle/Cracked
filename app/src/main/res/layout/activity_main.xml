@@ -1,55 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/importButton"
-        android:layout_width="wrap_content"
+    <include
+        android:id="@+id/toolbarView"
+        layout="@layout/tool_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="18dp" />
+
+    <TextView
+        android:id="@+id/importedText2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:text="Import"
-        app:layout_constraintBottom_toBottomOf="@+id/editTextRecipeURL"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/editTextRecipeURL"
-        app:layout_constraintVertical_bias="1.0"
-        tools:ignore="MissingConstraints" />
+        android:paddingHorizontal="10dp"
+        android:text="Import A Recipe" />
 
-    <EditText
-        android:id="@+id/editTextRecipeURL"
-        android:layout_width="270dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="24dp"
-        android:ems="10"
-        android:hint="Recipe URL"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toStartOf="@+id/importButton"
-        app:layout_constraintHorizontal_bias="0.47"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp">
+
+        <EditText
+            android:id="@+id/editTextRecipeURL"
+            android:layout_width="276dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:ems="10"
+            android:hint="URL"
+            android:inputType="textPersonName"
+            android:minHeight="48dp" />
+
+        <Button
+            android:id="@+id/importButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Import" />
+
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="21dp" />
+
+    <TextView
+        android:id="@+id/importedText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="10dp"
+        android:text="Imported Recipes" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:layout_width="410dp"
-        android:layout_height="478dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextRecipeURL"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:text="Imported Recipes"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
-        app:layout_constraintEnd_toEndOf="@+id/recyclerView"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/recyclerView" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

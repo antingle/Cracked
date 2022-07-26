@@ -2,6 +2,7 @@ package com.example.cracked;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -37,6 +38,7 @@ public class RecipeActivity extends AppCompatActivity {
     TextView titleTextView;
     ImageView imageView;
     LinearLayout lLayout;
+    Toolbar toolbar;
 
     // test recipes
     // https://www.allrecipes.com/recipe/254970/fried-green-tomato-parmesan/
@@ -49,11 +51,16 @@ public class RecipeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true); // helps to add the back button
 
-        titleTextView = (TextView) findViewById(R.id.titleTextView);
-        imageView = (ImageView) findViewById(R.id.imageView);
-        lLayout = (LinearLayout) findViewById(R.id.recipeLinearLayout);
+        toolbar = findViewById(R.id.toolbarView);
+        titleTextView = findViewById(R.id.titleTextView);
+        imageView = findViewById(R.id.imageView);
+        lLayout = findViewById(R.id.recipeLinearLayout);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
 
         recipe = new Recipe();
 
