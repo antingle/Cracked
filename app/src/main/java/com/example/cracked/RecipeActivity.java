@@ -178,7 +178,7 @@ public class RecipeActivity extends AppCompatActivity implements View.OnClickLis
 
                         recipe.ingredients = ingredients;
                         recipe.directions = directions;
-                        AddRecipeToDatabase();
+                        addRecipeToDatabase();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -201,7 +201,7 @@ public class RecipeActivity extends AppCompatActivity implements View.OnClickLis
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_add_to_cart) {
-            AddToShoppingCart();
+            addToShoppingCart();
         } else if (id == android.R.id.home) {
             finish();
         }
@@ -216,7 +216,7 @@ public class RecipeActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     // add the recipe to firebase
-    private void AddRecipeToDatabase() {
+    private void addRecipeToDatabase() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Map<String, Object> docData = new HashMap<>();
         docData.put("title", recipe.title);
@@ -246,7 +246,7 @@ public class RecipeActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     // add the recipe ingredients to the shopping cart on firebase
-    private void AddToShoppingCart() {
+    private void addToShoppingCart() {
         // Add each ingredient to shopping cart
         for (String ingredient : recipe.ingredients) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
