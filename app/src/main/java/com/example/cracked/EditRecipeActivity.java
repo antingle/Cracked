@@ -1,5 +1,7 @@
 package com.example.cracked;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -97,8 +99,8 @@ public class EditRecipeActivity extends AppCompatActivity {
                         }
                     });
         } else if (id == android.R.id.home) {
-            // make             // ADD CANCEL DIALOG
-            finish();
+            // confirm if user wants to discard their changes
+            showCancelDialog();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -211,5 +213,19 @@ public class EditRecipeActivity extends AppCompatActivity {
 
 
         return list;
+    }
+
+    protected void showCancelDialog() {
+        // Use the Builder class for convenient dialog construction
+        new AlertDialog.Builder(EditRecipeActivity.this)
+                .setTitle("Discard changes")
+                .setMessage("Are you sure you want to discard the changes to this recipe?")
+                .setPositiveButton("Discard", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        finish();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 }
