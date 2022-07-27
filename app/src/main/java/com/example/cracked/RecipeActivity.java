@@ -344,4 +344,19 @@ public class RecipeActivity extends AppCompatActivity implements View.OnClickLis
 
         }
     }
+
+    protected void UpdateIngredients(ArrayList<String> ingredients) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("recipes").document(recipe.id)
+                .update("ingredients", ingredients)
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(),
+                                "Error updating conversion",
+                                Toast.LENGTH_SHORT).show();
+                        Log.e("Recipe", "Error updating conversion", e);
+                    }
+                });
+    }
 }
