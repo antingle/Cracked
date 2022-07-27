@@ -52,7 +52,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="1x" />
+                    android:text="1X" />
 
                 <Button
                     android:id="@+id/conversionButton"

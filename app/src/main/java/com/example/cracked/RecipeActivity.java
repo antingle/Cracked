@@ -1,5 +1,8 @@
 package com.example.cracked;
 
+import static java.lang.Character.isDigit;
+import static java.lang.Character.isWhitespace;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -40,7 +43,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class RecipeActivity extends AppCompatActivity implements View.OnClickListener{
+public class RecipeActivity extends AppCompatActivity implements View.OnClickListener {
 
     TextView titleTextView;
     ImageView imageView;
@@ -50,6 +53,8 @@ public class RecipeActivity extends AppCompatActivity implements View.OnClickLis
     Button conversionButton;
     Button editButton;
     ArrayList<String> ingredients;
+    ArrayList<String> metricIngredients;
+    Boolean isMetric = false;
 
     // test recipes
     // https://www.allrecipes.com/recipe/254970/fried-green-tomato-parmesan/
@@ -82,6 +87,8 @@ public class RecipeActivity extends AppCompatActivity implements View.OnClickLis
 
 
         recipe = new Recipe();
+        metricIngredients = new ArrayList<>();
+        ingredients = new ArrayList<>();
 
         // grab website url
         Bundle extras = getIntent().getExtras();
@@ -139,7 +146,6 @@ public class RecipeActivity extends AppCompatActivity implements View.OnClickLis
                     try {
                         Document document = Jsoup.connect(websiteURL).timeout(6000).get();
 
-                        ingredients = new ArrayList<>();
                         ArrayList<String> directions = new ArrayList<>();
 
                         // find recipe ingredients
@@ -332,16 +338,275 @@ public class RecipeActivity extends AppCompatActivity implements View.OnClickLis
                 bundle.putStringArrayList("directions", recipe.directions);
                 intent.putExtras(bundle);
                 startActivity(intent);
+                break;
             }
             case R.id.conversionButton: {
-//                for (int i = 0; i < ingredients.size(); ++i) {
-//                    String temp = ingredients.indexOf(i);
-//                }
+                imperialToMetric();
+                setUpUI();
+                break;
             }
             case R.id.scaleButton: {
+                String buttonText = (String) scaleButton.getText();
 
+                if (buttonText.equals("1X")) {
+                    scaleButton.setText("2X");
+                    for (int i = 0; i < recipe.ingredients.size(); ++i) {
+                        if ((!isDigit(recipe.ingredients.get(i).charAt(0))) && !isFraction(recipe.ingredients.get(i).charAt(0))) {
+                            continue;
+                        }
+                        StringBuilder tempVal = new StringBuilder();
+                        StringBuilder tempIngredients = new StringBuilder(recipe.ingredients.get(i));
+                        double tempValDub = 0;
+                        if (isFraction(recipe.ingredients.get(i).charAt(0))) {
+                            for (int k = 0; k < recipe.ingredients.get(i).length(); ++k) {
+                                if (!isWhitespace(recipe.ingredients.get(i).charAt(k))) {
+                                    tempVal.append(recipe.ingredients.get(i).charAt(k));
+                                } else {
+                                    tempIngredients.delete(0, k);
+                                    recipe.ingredients.set(i, tempIngredients.toString());
+                                    break;
+                                }
+                            }
+                            tempValDub = calcFraction(tempVal.toString().charAt(0));
+                        } else {
+                            for (int k = 0; k < recipe.ingredients.get(i).length(); ++k) {
+                                if (!isWhitespace(recipe.ingredients.get(i).charAt(k))) {
+                                    tempVal.append(recipe.ingredients.get(i).charAt(k));
+                                } else {
+                                    tempIngredients.delete(0, k);
+                                    recipe.ingredients.set(i, tempIngredients.toString());
+                                    break;
+                                }
+                            }
+                            tempValDub = Double.parseDouble(tempVal.toString());
+                        }
+                        tempValDub *= 2;
+                        if (tempValDub == Math.round(tempValDub)) {
+                            int intVal = (int) tempValDub;
+                            recipe.ingredients.set(i, String.valueOf(intVal) + recipe.ingredients.get(i));
+
+                        } else {
+                            recipe.ingredients.set(i, String.valueOf(tempValDub) + recipe.ingredients.get(i));
+                        }
+                    }
+                } else if (buttonText.equals("2X")) {
+                    scaleButton.setText("3X");
+                    for (int i = 0; i < recipe.ingredients.size(); ++i) {
+                        if ((!isDigit(recipe.ingredients.get(i).charAt(0))) && !isFraction(recipe.ingredients.get(i).charAt(0))) {
+                            continue;
+                        }
+                        StringBuilder tempVal = new StringBuilder();
+                        StringBuilder tempIngredients = new StringBuilder(recipe.ingredients.get(i));
+                        double tempValDub = 0;
+                        if (isFraction(recipe.ingredients.get(i).charAt(0))) {
+                            for (int k = 0; k < recipe.ingredients.get(i).length(); ++k) {
+                                if (!isWhitespace(recipe.ingredients.get(i).charAt(k))) {
+                                    tempVal.append(recipe.ingredients.get(i).charAt(k));
+                                } else {
+                                    tempIngredients.delete(0, k);
+                                    recipe.ingredients.set(i, tempIngredients.toString());
+                                    break;
+                                }
+                            }
+                            tempValDub = calcFraction(tempVal.toString().charAt(0));
+                        } else {
+                            for (int k = 0; k < recipe.ingredients.get(i).length(); ++k) {
+                                if (!isWhitespace(recipe.ingredients.get(i).charAt(k))) {
+                                    tempVal.append(recipe.ingredients.get(i).charAt(k));
+                                } else {
+                                    tempIngredients.delete(0, k);
+                                    recipe.ingredients.set(i, tempIngredients.toString());
+                                    break;
+                                }
+                            }
+                            tempValDub = Double.parseDouble(tempVal.toString());
+                        }
+                        tempValDub *= 1.5;
+                        if (tempValDub == Math.round(tempValDub)) {
+                            int intVal = (int) tempValDub;
+                            recipe.ingredients.set(i, String.valueOf(intVal) + recipe.ingredients.get(i));
+
+                        } else {
+                            recipe.ingredients.set(i, String.valueOf(tempValDub) + recipe.ingredients.get(i));
+                        }
+                    }
+                } else if (buttonText.equals("3X")) {
+                    scaleButton.setText("1X");
+                    for (int i = 0; i < recipe.ingredients.size(); ++i) {
+                        if ((!isDigit(recipe.ingredients.get(i).charAt(0))) && !isFraction(recipe.ingredients.get(i).charAt(0))) {
+                            continue;
+                        }
+                        StringBuilder tempVal = new StringBuilder();
+                        StringBuilder tempIngredients = new StringBuilder(recipe.ingredients.get(i));
+                        double tempValDub = 0;
+                        if (isFraction(recipe.ingredients.get(i).charAt(0))) {
+                            for (int k = 0; k < recipe.ingredients.get(i).length(); ++k) {
+                                if (!isWhitespace(recipe.ingredients.get(i).charAt(k))) {
+                                    tempVal.append(recipe.ingredients.get(i).charAt(k));
+                                } else {
+                                    tempIngredients.delete(0, k);
+                                    recipe.ingredients.set(i, tempIngredients.toString());
+                                    break;
+                                }
+                            }
+                            tempValDub = calcFraction(tempVal.toString().charAt(0));
+                        } else {
+                            for (int k = 0; k < recipe.ingredients.get(i).length(); ++k) {
+                                if (!isWhitespace(recipe.ingredients.get(i).charAt(k))) {
+                                    tempVal.append(recipe.ingredients.get(i).charAt(k));
+                                } else {
+                                    tempIngredients.delete(0, k);
+                                    recipe.ingredients.set(i, tempIngredients.toString());
+                                    break;
+                                }
+                            }
+                            tempValDub = Double.parseDouble(tempVal.toString());
+                        }
+                        tempValDub /= 3;
+                        if (tempValDub == Math.round(tempValDub)) {
+                            int intVal = (int) tempValDub;
+                            recipe.ingredients.set(i, String.valueOf(intVal) + recipe.ingredients.get(i));
+
+                        } else {
+                            recipe.ingredients.set(i, String.valueOf(tempValDub) + recipe.ingredients.get(i));
+                        }
+                    }
+                }
+                setUpUI();
+                break;
             }
-
         }
     }
+
+    public double calcFraction(char input) {
+        switch (input) {
+            case '¼': {
+                return 0.25;
+            }
+            case '⅓': {
+                return 0.33;
+            }
+            case '½': {
+                return 0.5;
+            }
+            case '⅔': {
+                return 0.66;
+            }
+            case '¾': {
+                return .75;
+            }
+            default: {
+                return 0;
+            }
+        }
+    }
+
+    public boolean isFraction(char input) {
+        switch (input) {
+            case '¼':
+            case '⅓':
+            case '½':
+            case '⅔':
+            case '¾': {
+                return true;
+            }
+            default: {
+                return false;
+            }
+        }
+    }
+
+    public void imperialToMetric() {
+        isMetric = !isMetric;
+        if (!metricIngredients.isEmpty())
+        {
+            if (isMetric) {
+                conversionButton.setText("Metric");
+                recipe.ingredients = metricIngredients;
+            } else {
+                conversionButton.setText("Imperial");
+                recipe.ingredients = ingredients;
+            }
+            setUpUI();
+            return;
+        }
+
+        conversionButton.setText("Metric");
+        for (String ingredient : recipe.ingredients) {
+            metricIngredients.add(ingredient);
+            ingredients.add(ingredient);
+        }
+
+        for (int i = 0; i < recipe.ingredients.size(); ++i) {
+            int whitespace = 0;
+            StringBuilder num = new StringBuilder();
+            StringBuilder temp = new StringBuilder();
+            temp.append(recipe.ingredients.get(i));
+
+            if ((!isDigit(recipe.ingredients.get(i).charAt(0))) && !isFraction(recipe.ingredients.get(i).charAt(0))) {
+                continue;
+            }
+            StringBuilder tempVal = new StringBuilder();
+            StringBuilder tempIngredients = new StringBuilder(recipe.ingredients.get(i));
+            double tempValDub = 0;
+            if (isFraction(recipe.ingredients.get(i).charAt(0))) {
+                for (int k = 0; k < recipe.ingredients.get(i).length(); ++k) {
+                    if (!isWhitespace(recipe.ingredients.get(i).charAt(k))) {
+                        tempVal.append(recipe.ingredients.get(i).charAt(k));
+                    } else {
+                        tempIngredients.delete(0, k);
+                        recipe.ingredients.set(i, tempIngredients.toString());
+                        break;
+                    }
+                }
+                tempValDub = calcFraction(tempVal.toString().charAt(0));
+            }
+                else{
+                    for (int k = 0; k < recipe.ingredients.get(i).length(); ++k) {
+                        if (isWhitespace(recipe.ingredients.get(i).charAt(k))) {
+                            ++whitespace;
+                        }
+                        if (whitespace == 0) {
+                            num.append(recipe.ingredients.get(i).charAt(k));
+                            temp.delete(0, k);
+                        }
+                    }
+                recipe.ingredients.set(i, temp.toString());
+                String Number = num.toString();
+               tempValDub = Double.parseDouble(Number);
+                }
+
+
+
+            if ((recipe.ingredients.get(i).contains("cups"))){
+                tempValDub = tempValDub * 128;
+                metricIngredients.set(i, tempValDub + (recipe.ingredients.get(i).replaceAll("cups", "grams")));
+            }
+            else if ((recipe.ingredients.get(i).contains("tablespoons"))){
+                tempValDub = tempValDub * 14.3;
+                metricIngredients.set(i, tempValDub + (recipe.ingredients.get(i).replaceAll("tablespoons", "grams")));
+            }
+            else if ((recipe.ingredients.get(i).contains("teaspoons"))) {
+                tempValDub = tempValDub * 5.69;
+                metricIngredients.set(i, tempValDub + (recipe.ingredients.get(i).replaceAll("teaspoons", "grams")));
+            }
+            else if ((recipe.ingredients.get(i).contains("cup"))){
+                tempValDub = tempValDub * 128;
+                metricIngredients.set(i, tempValDub + (recipe.ingredients.get(i).replaceAll("cup", "grams")));
+            }
+            else if ((recipe.ingredients.get(i).contains("tablespoon"))){
+                tempValDub = tempValDub * 14.3;
+                metricIngredients.set(i, tempValDub + (recipe.ingredients.get(i).replaceAll("tablespoon", "grams")));
+            }
+            else if ((recipe.ingredients.get(i).contains("teaspoon"))){
+                tempValDub = tempValDub * 5.69;
+                metricIngredients.set(i, tempValDub + (recipe.ingredients.get(i).replaceAll("teaspoon", "grams")));
+            }
+        }
+        recipe.ingredients = metricIngredients;
+        setUpUI();
+
+    }
+
+
 }
